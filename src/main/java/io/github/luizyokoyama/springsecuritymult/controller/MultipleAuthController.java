@@ -8,6 +8,6 @@ public class MultipleAuthController {
 
     @GetMapping("/api/ping")
     public String getPing() {
-        return "OK";
+        return "Meu teste de Autenticação: \n            AUTENTICAÇÃO OK\n\n";
     }
 }
