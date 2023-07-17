@@ -2,15 +2,18 @@ package io.github.luizyokoyama.springsecuritymult.config;
 
 import org.apache.commons.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.*;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
 import org.springframework.security.web.SecurityFilterChain;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -32,10 +35,9 @@ public class MultipleAuthProvidersSecurityConfig {
     @Autowired
     CustomAuthenticationProviderJwt customAuthenticationProviderJwt;
 
-
     @Bean
-    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+    public AuthenticationManager authManager(ObjectPostProcessor<Object> objectPostProcessor) throws Exception {
+        AuthenticationManagerBuilder authenticationManagerBuilder = new AuthenticationManagerBuilder(objectPostProcessor);
         authenticationManagerBuilder.authenticationProvider(customAuthProvider);
         authenticationManagerBuilder.authenticationProvider(customAuthProvider2);
         authenticationManagerBuilder.authenticationProvider(customAuthProvider3);
@@ -96,5 +98,6 @@ public class MultipleAuthProvidersSecurityConfig {
 
         return  NimbusJwtDecoder.withPublicKey(rsaPublicKey).build();
     }
+
 
 }

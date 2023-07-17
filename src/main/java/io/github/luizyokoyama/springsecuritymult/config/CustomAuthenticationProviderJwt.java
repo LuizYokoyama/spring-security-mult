@@ -23,10 +23,19 @@ public class CustomAuthenticationProviderJwt implements AuthenticationProvider {
 
 
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        AbstractAuthenticationToken token = null;
+        BearerTokenAuthenticationToken bearer = null;
+        try {
+            bearer = (BearerTokenAuthenticationToken)authentication;
+            Jwt jwt = this.getJwt(bearer);
+            token = this.jwtAuthenticationConverter.convert(jwt);
+        }catch (Exception e){
+            throw new BadCredentialsException("JWT token authentication failed");
+        }
 
-        BearerTokenAuthenticationToken bearer = (BearerTokenAuthenticationToken)authentication;
-        Jwt jwt = this.getJwt(bearer);
-        AbstractAuthenticationToken token = this.jwtAuthenticationConverter.convert(jwt);
+        if (token == null){
+            throw new BadCredentialsException("JWT token authentication failed");
+        }
         if (token.getDetails() == null) {
             token.setDetails(bearer.getDetails());
         }
