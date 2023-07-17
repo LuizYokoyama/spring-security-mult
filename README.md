@@ -2,6 +2,14 @@
 
 Para testar:
 
+***Teste de usuário/senha:***
+
 curl -i http://localhost:8080/api/ping   --user "user1:pass"
 
+***Teste de jwt com a primeira chave pública***
+
 curl -i http://localhost:8080/api/ping   -H "Accept: application/json"  -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LnRlc3QudGVzdCIsIm5hbWUiOiJhbnRvbmlvIiwiYXVkIjoidGFtYXJhIiwiaWF0IjoxNjg5MzY1MDM3LCJwcm9wWSI6dHJ1ZX0.CE5rMOOFut4SVVzuiBzwcQtL5tqSSkYI5lRIM9lXj6WY5GF4mhvz13S77wu6TRaQgdrwkBO8ltHvXPlslN4PcdcKbl098iN6pkGt2DUoiV0gv5MTnIbaYzpOgt7Wco3mi0ye-5MCeoWISkXYd63ECVR1dWdHVlihNPF28eIwRaONKC4iSWfdGDWC7T4H4a-zfa6R_vW4e3ZUztfGuLKtNqN8ypz6aAeGwO1c2Wyq4Le6cY7RSpJvnjopATA6FoqRafwc0v8JGHOkaD-mMQUjkxlMBsgNTtG22EjerM2YC2hPHAm4dbyTvrUM9nm_71nBFik66kXu1f10PL5dIna_OA"
+
+***Teste de jwt com a segunda chave pública***
+
+curl -i http://localhost:8080/api/ping 	-H "Accept: application/json"  -H "Authorization: Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJ0ZXN0LnRlc3QudGVzdCIsIm5hbWUiOiJhbnRvbmlvIiwiYXVkIjoidGFtYXJhIiwiaWF0IjoxNjg5NjM2NzYwLCJwcm9wWSI6dHJ1ZX0.Gfusgs0Tsodc7hHwBlJIXkfVbFT1gKvhVrniHTPR3voFQKtXFOuTUPSr0igCuqJ64PoWQwUZbGKuxt-tg0YzQoboaO2PJnhDyqYwfLVXDvCMD0Dx17-1bfH2JNX2HvTwHMM9xu1t0wR7KytYJDzZJejayELLOFP4d2RmuhroRc7gJD05TFUpJhxr8_WBQlJXOOmWwxPud8Z9oUyTLEGunmxDcXqVjcRTLI6R4FZ0pE4WdCCAP4w8FAnYdASqfW3ngFq3UMyQh23vZFUtBpzlpLiFkrImcyd94JxhLwTqNUg2xfN-blJW6j-8rdjslfduvjPOrap4Dy22JcYhUyagbA"
