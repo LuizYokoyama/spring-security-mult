@@ -25,7 +25,8 @@ public class MultipleAuthProvidersSecurityConfig {
 
     @Autowired
     CustomAuthenticationProviderJwt customAuthenticationProviderJwt;
-
+    @Autowired
+    CustomAuthenticationProviderJwt2 customAuthenticationProviderJwt2;
     @Bean
     public AuthenticationManager authManager(ObjectPostProcessor<Object> objectPostProcessor) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder = new AuthenticationManagerBuilder(objectPostProcessor);
@@ -33,6 +34,7 @@ public class MultipleAuthProvidersSecurityConfig {
         authenticationManagerBuilder.authenticationProvider(customAuthProvider2);
         authenticationManagerBuilder.authenticationProvider(customAuthProvider3);
         authenticationManagerBuilder.authenticationProvider(customAuthenticationProviderJwt);
+        authenticationManagerBuilder.authenticationProvider(customAuthenticationProviderJwt2);
         authenticationManagerBuilder.inMemoryAuthentication()
                 .withUser("memuser")
                 .password(passwordEncoder().encode("pass"))

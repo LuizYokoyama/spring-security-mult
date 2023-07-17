@@ -7,7 +7,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.authentication.*;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.jwt.*;
@@ -15,6 +18,7 @@ import org.springframework.security.oauth2.server.resource.InvalidBearerTokenExc
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.stereotype.Component;
+
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPublicKey;
@@ -22,19 +26,18 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 
 
-
 @Component
-public class CustomAuthenticationProviderJwt implements AuthenticationProvider {
+public class CustomAuthenticationProviderJwt2 implements AuthenticationProvider {
 
 
-    @Value("${my.jwt.public.key}")
+    @Value("${my.jwt.public.key2}")
     private String myPublicKey;
 
     @Value("${my.jwt.algorithm}")
     private String algorithm;
 
     private final Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter = new JwtAuthenticationConverter();
-    private Logger logger = LoggerFactory.getLogger(CustomAuthenticationProviderJwt.class);
+    private Logger logger = LoggerFactory.getLogger(CustomAuthenticationProviderJwt2.class);
 
 
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -55,7 +58,7 @@ public class CustomAuthenticationProviderJwt implements AuthenticationProvider {
             token.setDetails(bearer.getDetails());
         }
 
-        logger.info("Primeira chave publica usada para jwt");
+        logger.info("Segunda chave publica usada para jwt");
         return token;
     }
 
@@ -73,7 +76,7 @@ public class CustomAuthenticationProviderJwt implements AuthenticationProvider {
         return BearerTokenAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
-    @Bean
+
     public JwtDecoder jwtDecoder() {
 
         RSAPublicKey rsaPublicKey;
