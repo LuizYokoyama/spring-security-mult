@@ -1,6 +1,9 @@
 package io.github.luizyokoyama.springsecuritymult.config;
 
 
+import org.apache.commons.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -10,21 +13,30 @@ import org.springframework.security.oauth2.server.resource.InvalidBearerTokenExc
 import org.springframework.security.oauth2.server.resource.authentication.BearerTokenAuthenticationToken;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.stereotype.Component;
-
-import static io.github.luizyokoyama.springsecuritymult.config.MultipleAuthProvidersSecurityConfig.jwtDecoder;
+import java.security.KeyFactory;
+import java.security.NoSuchAlgorithmException;
+import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
 
 
 @Component
 public class CustomAuthenticationProviderJwt implements AuthenticationProvider {
 
 
-    private Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter = new JwtAuthenticationConverter();
+    @Value("${my.jwt.public.key}")
+    private String myPublicKey;
+
+    @Value("${my.jwt.algorithm}")
+    private String algorithm;
+
+    private final Converter<Jwt, ? extends AbstractAuthenticationToken> jwtAuthenticationConverter = new JwtAuthenticationConverter();
 
 
 
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        AbstractAuthenticationToken token = null;
-        BearerTokenAuthenticationToken bearer = null;
+        AbstractAuthenticationToken token;
+        BearerTokenAuthenticationToken bearer;
         try {
             bearer = (BearerTokenAuthenticationToken)authentication;
             Jwt jwt = this.getJwt(bearer);
@@ -57,5 +69,26 @@ public class CustomAuthenticationProviderJwt implements AuthenticationProvider {
         return BearerTokenAuthenticationToken.class.isAssignableFrom(authentication);
     }
 
+    @Bean
+    public JwtDecoder jwtDecoder() {
+
+        RSAPublicKey rsaPublicKey;
+        byte[] encoded = Base64.decodeBase64(myPublicKey);
+
+        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
+        KeyFactory keyFactory;
+        try {
+            keyFactory = KeyFactory.getInstance(algorithm);
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            rsaPublicKey = (RSAPublicKey) keyFactory.generatePublic(keySpec);
+        } catch (InvalidKeySpecException e) {
+            throw new RuntimeException(e);
+        }
+
+        return  NimbusJwtDecoder.withPublicKey(rsaPublicKey).build();
+    }
 
 }
